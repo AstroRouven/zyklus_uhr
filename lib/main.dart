@@ -395,7 +395,7 @@ class _HotspotOverlay extends StatelessWidget {
 
           return Stack(
             children: [
-              _CircleHotspot(center: female, diameter: diameter, onTap: onFemale, label: 'DIE FRAU ENTDECKEN'),
+              _CircleHotspot(center: female, diameter: diameter, onTap: onFemale, label: 'DIE FRAU ENTDECKEN', showRing: false),
               _CircleHotspot(center: male, diameter: diameter, onTap: onMale, label: 'DEN MANN ENTDECKEN'),
               _CircleHotspot(center: rel, diameter: diameter, onTap: onRel, label: 'DAS WIR ENTDECKEN'),
             ],
@@ -411,12 +411,14 @@ class _CircleHotspot extends StatelessWidget {
   final double diameter;
   final VoidCallback onTap;
   final String label;
+  final bool showRing;
 
   const _CircleHotspot({
     required this.center,
     required this.diameter,
     required this.onTap,
     required this.label,
+    this.showRing = true,
   });
 
   @override
@@ -441,7 +443,7 @@ class _CircleHotspot extends StatelessWidget {
             child: Stack(
               alignment: Alignment.topCenter,
               children: [
-                Positioned(
+                if (showRing) Positioned(
                   top: 0,
                   width: diameter,
                   height: diameter,
