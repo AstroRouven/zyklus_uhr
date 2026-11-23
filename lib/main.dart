@@ -395,9 +395,9 @@ class _HotspotOverlay extends StatelessWidget {
 
           return Stack(
             children: [
-              _CircleHotspot(center: female, diameter: diameter, onTap: onFemale, label: 'Weiblichen Archetyp'),
-              _CircleHotspot(center: male, diameter: diameter, onTap: onMale, label: 'Männlichen Archetyp'),
-              _CircleHotspot(center: rel, diameter: diameter, onTap: onRel, label: 'Beziehungsarchetyp'),
+              _CircleHotspot(center: female, diameter: diameter, onTap: onFemale, label: 'DIE FRAU ENTDECKEN'),
+              _CircleHotspot(center: male, diameter: diameter, onTap: onMale, label: 'DEN MANN ENTDECKEN'),
+              _CircleHotspot(center: rel, diameter: diameter, onTap: onRel, label: 'DAS WIR ENTDECKEN'),
             ],
           );
         },
@@ -423,7 +423,7 @@ class _CircleHotspot extends StatelessWidget {
   Widget build(BuildContext context) {
     // Das Label ragt unter den Bildkreis; die gesamte Fläche bleibt klickbar.
     final badgeHeight = (diameter * .27).clamp(19.0, 36.0);
-    final badgeWidth = (diameter * 1.16).clamp(78.0, 155.0);
+    final badgeWidth = (diameter * 1.50).clamp(110.0, 190.0);
     final totalHeight = diameter + badgeHeight * .48;
     return Positioned(
       left: center.dx - badgeWidth / 2,
@@ -432,7 +432,7 @@ class _CircleHotspot extends StatelessWidget {
       height: totalHeight,
       child: Semantics(
         button: true,
-        label: '$label entdecken',
+        label: label,
         child: Material(
           type: MaterialType.transparency,
           child: InkWell(
@@ -449,9 +449,8 @@ class _CircleHotspot extends StatelessWidget {
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       border: Border.all(color: const Color(0xFFFFD878), width: 3),
-                      boxShadow: const [
-                        BoxShadow(color: Color(0x99FFCB55), blurRadius: 9, spreadRadius: 1),
-                      ],
+                      // Kein Schatten: Ein transparenter Kreis mit BoxShadow
+                      // würde die darunterliegende Illustration gelb überlagern.
                     ),
                     child: showDebugHotspots
                         ? Center(child: Text(label, style: const TextStyle(color: Colors.red)))
@@ -477,7 +476,7 @@ class _CircleHotspot extends StatelessWidget {
                         child: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            Text('ENTDECKEN', style: TextStyle(color: Colors.black, fontSize: (badgeHeight * .48).clamp(10.0, 15.0), fontWeight: FontWeight.w900)),
+                            Text(label, style: TextStyle(color: Colors.black, fontSize: (badgeHeight * .48).clamp(10.0, 15.0), fontWeight: FontWeight.w900)),
                             const Icon(Icons.chevron_right, size: 17, color: Colors.black),
                           ],
                         ),
