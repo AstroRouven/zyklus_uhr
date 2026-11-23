@@ -620,7 +620,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                   const Spacer(),
                   FilledButton.icon(
                     style: FilledButton.styleFrom(
-                      backgroundColor: const Color(0xFFE7B751),
+                      backgroundColor: const Color(0x80E7B751), // 50 % Deckkraft
                       foregroundColor: Colors.black,
                       padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 14),
                     ),
