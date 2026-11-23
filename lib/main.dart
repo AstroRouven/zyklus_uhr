@@ -395,9 +395,9 @@ class _HotspotOverlay extends StatelessWidget {
 
           return Stack(
             children: [
-              _CircleHotspot(center: female, diameter: diameter, onTap: onFemale, label: 'W'),
-              _CircleHotspot(center: male, diameter: diameter, onTap: onMale, label: 'M'),
-              _CircleHotspot(center: rel, diameter: diameter, onTap: onRel, label: 'R'),
+              _CircleHotspot(center: female, diameter: diameter, onTap: onFemale, label: 'Weiblichen Archetyp'),
+              _CircleHotspot(center: male, diameter: diameter, onTap: onMale, label: 'Männlichen Archetyp'),
+              _CircleHotspot(center: rel, diameter: diameter, onTap: onRel, label: 'Beziehungsarchetyp'),
             ],
           );
         },
@@ -421,23 +421,72 @@ class _CircleHotspot extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Das Label ragt unter den Bildkreis; die gesamte Fläche bleibt klickbar.
+    final badgeHeight = (diameter * .27).clamp(19.0, 36.0);
+    final badgeWidth = (diameter * 1.16).clamp(78.0, 155.0);
+    final totalHeight = diameter + badgeHeight * .48;
     return Positioned(
-      left: center.dx - diameter / 2,
+      left: center.dx - badgeWidth / 2,
       top: center.dy - diameter / 2,
-      width: diameter,
-      height: diameter,
-      child: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: onTap,
-        child: CustomPaint(
-          painter: showDebugHotspots ? _DashedCirclePainter() : null,
-          child: Center(
-            child: showDebugHotspots
-                ? Text(
-                    label,
-                    style: const TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold),
-                  )
-                : null,
+      width: badgeWidth,
+      height: totalHeight,
+      child: Semantics(
+        button: true,
+        label: '$label entdecken',
+        child: Material(
+          type: MaterialType.transparency,
+          child: InkWell(
+            borderRadius: BorderRadius.circular(diameter),
+            onTap: onTap,
+            child: Stack(
+              alignment: Alignment.topCenter,
+              children: [
+                Positioned(
+                  top: 0,
+                  width: diameter,
+                  height: diameter,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(color: const Color(0xFFFFD878), width: 3),
+                      boxShadow: const [
+                        BoxShadow(color: Color(0x99FFCB55), blurRadius: 9, spreadRadius: 1),
+                      ],
+                    ),
+                    child: showDebugHotspots
+                        ? Center(child: Text(label, style: const TextStyle(color: Colors.red)))
+                        : null,
+                  ),
+                ),
+                Positioned(
+                  top: diameter - badgeHeight * .72,
+                  child: Container(
+                    width: badgeWidth * .91,
+                    height: badgeHeight,
+                    alignment: Alignment.center,
+                    decoration: BoxDecoration(
+                      gradient: const LinearGradient(colors: [Color(0xFFFFE9A2), Color(0xFFD49B32), Color(0xFFFFE39A)]),
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: const Color(0xFFFFF1C3), width: 1),
+                      boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 5, offset: Offset(0, 2))],
+                    ),
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 6),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text('ENTDECKEN', style: TextStyle(color: Colors.black, fontSize: (badgeHeight * .48).clamp(10.0, 15.0), fontWeight: FontWeight.w900)),
+                            const Icon(Icons.chevron_right, size: 17, color: Colors.black),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),
@@ -552,6 +601,37 @@ class _CategoryScreenState extends State<CategoryScreen> {
                 ),
               ),
             ],
+          ),
+          Positioned(
+            left: 12,
+            right: 12,
+            bottom: 16,
+            child: SafeArea(
+              top: false,
+              child: Row(
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 10),
+                    decoration: BoxDecoration(color: Colors.black87, borderRadius: BorderRadius.circular(22)),
+                    child: Text('${index + 1} von ${images.length}',
+                      style: const TextStyle(color: Color(0xFFFFE0A0), fontWeight: FontWeight.bold)),
+                  ),
+                  const Spacer(),
+                  FilledButton.icon(
+                    style: FilledButton.styleFrom(
+                      backgroundColor: const Color(0xFFE7B751),
+                      foregroundColor: Colors.black,
+                      padding: const EdgeInsets.symmetric(horizontal: 17, vertical: 14),
+                    ),
+                    onPressed: index == images.length - 1
+                        ? () => Navigator.of(context).pop()
+                        : _next,
+                    icon: Icon(index == images.length - 1 ? Icons.home_outlined : Icons.arrow_forward),
+                    label: Text(index == images.length - 1 ? 'Zur Zyklusuhr' : 'Weiter'),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
